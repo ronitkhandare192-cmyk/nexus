@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>AI-Trainer — Intelligent Fitness Guidance</title>
+<style>
+  :root{
+    --accent:#0284c7;
+    --bg:#f9fafb;
+    --text:#0f172a;
+    --muted:#475569;
+    --card:#ffffff;
+    --shadow:0 6px 18px rgba(0,0,0,0.06);
+    font-family:"Inter",ui-sans-serif,system-ui;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.6;
+    overflow-x:hidden;
+    transform:scale(1.45);
+    opacity:0;
+    transition:transform 1.4s ease-out,opacity 1.4s ease-out;
+  }
+  body.loaded{transform:scale(1);opacity:1;}
+  .container{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;flex-direction:column;gap:60px}
+  header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;padding:24px 0}
+  .brand{display:flex;align-items:center;gap:14px}
+  .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#38bdf8);
+         display:flex;align-items:center;justify-content:center;font-weight:700;color:#fff;font-size:20px}
+  h1{font-size:22px;font-weight:700;margin-bottom:4px}
+  .small{font-size:14px;color:var(--muted)}
+
+  /* Scroll reveal defaults */
+  .reveal,.metric,.f,.status{
+    opacity:0;
+    transform:translateY(80px) scale(0.98);
+    transition:all 1.4s ease-out;
+  }
+  .visible{opacity:1!important;transform:translateY(0) scale(1)!important;}
+
+  section{
+    background:var(--card);
+    border-radius:16px;
+    box-shadow:var(--shadow);
+    padding:48px;
+    display:flex;
+    flex-direction:column;
+    gap:32px;
+  }
+
+  img{width:100%;border-radius:12px;object-fit:cover}
+  .hero{display:flex;align-items:center;gap:40px;flex-wrap:wrap}
+  .hero-text{flex:1;min-width:280px;display:flex;flex-direction:column;gap:14px}
+  .hero-side{flex:1;min-width:260px}
+
+  .btn{background:var(--accent);color:#fff;border:none;padding:12px 20px;border-radius:10px;
+       font-weight:600;cursor:pointer;transition:background .25s,transform .25s}
+  .btn:hover{background:#0369a1;transform:scale(1.05)}
+
+  /* unified feature + metric styling */
+  .features{display:flex;flex-wrap:wrap;gap:20px;margin-top:10px}
+  .f,.metric{
+    flex:1 1 30%;
+    min-width:200px;
+    position:relative;
+    padding:28px;                    /* ↑ increased from 20px → 28px for more breathing room */
+    border-radius:16px;
+    text-align:center;
+    background:#ffffff;
+    border:2px solid transparent;
+    background-image:linear-gradient(#fff,#fff),linear-gradient(135deg,var(--accent),#60a5fa);
+    background-origin:border-box;
+    background-clip:content-box,border-box;
+    box-shadow:0 8px 20px rgba(2,132,199,0.08);
+    transition:transform .4s ease,box-shadow .4s ease;
+  }
+  .f:hover,.metric:hover{
+    transform:translateY(-10px) scale(1.04);
+    box-shadow:0 12px 28px rgba(2,132,199,0.2);
+  }
+  .metric .value{font-size:36px;font-weight:800;color:var(--accent);text-shadow:0 0 8px rgba(2,132,199,0.2)}
+
+  .three-step{display:flex;flex-direction:column;gap:14px}
+  .step{display:flex;gap:14px;align-items:center}
+  .dot{
+    width:42px;height:42px;border-radius:50%;
+    background:#fff;
+    border:3px solid var(--accent);
+    display:flex;align-items:center;justify-content:center;font-weight:700;
+    color:var(--accent);
+    box-shadow:0 0 12px rgba(2,132,199,0.4);
+  }
+
+  .tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px}
+  .preview{height:220px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+           background:#f1f5f9;position:relative;overflow:hidden}
+  .preview .status{
+    position:absolute;top:12px;left:12px;padding:8px 14px;border-radius:8px;
+    background:rgba(0,0,0,0.05);font-weight:600;
+  }
+
+  .feedback{font-size:18px;font-weight:700;text-align:center}
+  .voice-dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-left:8px;vertical-align:middle;background:#facc15;opacity:0}
+  .pulse{animation:pulse 900ms infinite}
+  @keyframes pulse{0%{transform:scale(1);opacity:1}50%{transform:scale(1.5);opacity:.35}100%{transform:scale(1);opacity:1}}
+  .sim-buttons{display:flex;flex-wrap:wrap;justify-content:center;gap:12px}
+  @media(max-width:768px){
+    .hero{flex-direction:column}
+    header{flex-direction:column;align-items:flex-start;gap:10px}
+    section{padding:32px}
+    .metric .value{font-size:28px}
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="brand">
+      <div class="logo">NTX</div>
+      <div>
+        <h1>AI-Trainer — all-weather AI fitness coach</h1>
+        <div class="small">Real-time posture correction for safe, effective home training</div>
+      </div>
+    </div>
+    <div class="small">Team Nexus — tcaiae@connect.ust.hk</div>
+  </header>
+
+ <section class="reveal">
+  <div class="hero">
+    <div class="hero-text">
+      <h2 style="font-size:28px;">The AI-Trainer developed by Nexus</h2>
+      <ul style="margin-left:20px;line-height:1.7;">
+        <li>Combines phone vision, a lightweight IMU wearable, and a multimodal AI fusion algorithm</li>
+        <li>Gives users instant advice for form correction during exercises</li>
+        <li>Helps you stay safe while making the best progress for your body</li>
+      </ul>
+      <button class="btn" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">See demo</button>
+      <div class="features">
+        <div class="f"><strong>Dual-source sensing</strong><br><span class="small">Macro visual + micro IMU sensors for robust posture judgments.</span></div>
+        <div class="f"><strong>Instant correction</strong><br><span class="small">Visual prompt + voice guidance — preventive, not post-hoc.</span></div>
+        <div class="f"><strong>Zero barrier</strong><br><span class="small">Quick setup, wearable &lt;10 g, automatic pairing — built for everyone.</span></div>
+      </div>
+    </div>
+    <div class="hero-side">
+      <img id="heroImg" src="images/img1.png" alt="AI-Trainer concept image" style="transition:opacity 1s ease;opacity:1;">
+    </div>
+  </div>
+</section>
+
+  <section class="reveal">
+    <h3 style="font-size:24px;">How it works — simplified</h3>
+    <div class="three-step">
+      <div class="step"><div class="dot">1</div><div><strong>Wear sensors</strong><div class="small">Patch/clasp on knee or lower back — &lt;10 g, 8 hr battery.</div></div></div>
+      <div class="step"><div class="dot">2</div><div><strong>Start the app</strong><div class="small">Phone camera + BLE sync captures macro + micro data.</div></div></div>
+      <div class="step"><div class="dot">3</div><div><strong>Adjust in real time</strong><div class="small">Visual overlay + voice cues instantly correct posture.</div></div></div>
+    </div>
+    <img src="images/img3.png" alt="Workflow diagram">
+    <div class="tech-grid">
+      <div class="metric"><div>Detection accuracy</div><div class="value">≥ 95 %</div><div class="small">Validated across 100+ users.</div></div>
+      <div class="metric"><div>Latency</div><div class="value">&lt; 150 ms</div><div class="small">Instant real-time feedback.</div></div>
+      <div class="metric"><div>Joint angle error</div><div class="value">≤ 2°</div><div class="small">High-precision IMU + vision fusion.</div></div>
+      <div class="metric"><div>Wearable battery</div><div class="value">~ 8 hr</div><div class="small">Optimized for daily sessions.</div></div>
+    </div>
+  </section>
+
+  <section id="demo" class="reveal">
+    <h3 style="font-size:24px;">Mini interactive preview — simulated feedback</h3>
+    <img src="images/img4.png" alt="App feedback mockup">
+    <div class="preview">
+      <div class="status" id="status">Ready</div>
+      <div>
+        <div class="feedback" id="fbText">Perfect form</div>
+        <div class="small" style="text-align:center;">*Demo only* — simulated app feedback UX.</div>
+      </div>
+    </div>
+    <div class="sim-buttons">
+      <button class="btn" onclick="simulate('perfect')">Perfect</button>
+      <button class="btn" onclick="simulate('back')">Straighten Back</button>
+      <button class="btn" onclick="simulate('knee')">Align Knee</button>
+      <button class="btn" onclick="simulate('fast')">Slow Down</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  // initial zoom-in load
+  window.addEventListener("load",()=>document.body.classList.add("loaded"));
+
+  // scroll reveal observer
+  const revealEls=document.querySelectorAll('.reveal,.metric,.f,.status');
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+  },{threshold:0.1});
+  revealEls.forEach(r=>observer.observe(r));
+
+  // simulation logic
+  const fbText=document.getElementById('fbText');
+  const status=document.getElementById('status');
+
+  // --- image cycling between img1.png and img2.png ---
+  const heroImg = document.getElementById('heroImg');
+  const heroImages = ['images/img1.png','images/img2.png'];
+  let heroIndex = 0;
+
+    setInterval(() => {
+    heroImg.style.opacity = 0; // fade out
+    setTimeout(() => {
+      heroIndex = (heroIndex + 1) % heroImages.length;
+      heroImg.src = heroImages[heroIndex];
+      heroImg.style.opacity = 1; // fade in
+    }, 1000);
+  }, 3000);
+
+  function clearPulse(){fbText.innerHTML=fbText.innerHTML.replace(' <span class="voice-dot pulse"></span>','');}
+  function simulate(mode){
+    status.textContent='Analysing…';fbText.textContent='Processing';clearPulse();
+    setTimeout(()=>{
+      if(mode==='perfect'){fbText.innerHTML='Perfect form <span class="voice-dot pulse"></span>';status.textContent='Good';}
+      else if(mode==='back'){fbText.innerHTML='Straighten your back <span class="voice-dot pulse"></span>';status.textContent='Alert';}
+      else if(mode==='knee'){fbText.innerHTML='Align your knee with toes <span class="voice-dot pulse"></span>';status.textContent='Alert';}
+      else if(mode==='fast'){fbText.innerHTML='Slow down — control movement <span class="voice-dot pulse"></span>';status.textContent='Warn';}
+      else{fbText.innerText='Ready';status.textContent='Ready';}
+      const dot=document.querySelector('.voice-dot');if(dot)dot.style.opacity=1;
+    },600);
+  }
+</script>
+</body>
+</html>
